@@ -1,3 +1,5 @@
+import java.lang.Math;
+
 /**
   Represent a square chess board for a queens puzzle
   of a particular size.
@@ -15,12 +17,16 @@ public class BoardForQueensPuzzle {
       This common thinking was used for the filledElements field
       in List_inArraySlots exactly the same way.
       */
+    private int size;
 
 
     /**
       Construct an empty instance of the specified size
      */
     public BoardForQueensPuzzle( int ranks) {
+	lastRankFilled = -1;
+	size = ranks;
+	filesWithQueens = new int[size];
     }
 
 
@@ -28,7 +34,7 @@ public class BoardForQueensPuzzle {
       @return the size of the board
      */
     public int ranks() {
-        return -16;   // invalid value
+        return size;   // invalid value
     }
 
 
@@ -40,7 +46,15 @@ public class BoardForQueensPuzzle {
                      no queen attacked another.
      */
     public boolean lastIsNg() {
-        return true;
+	for(int indexRank = 0; indexRank < lastRankFilled; indexRank++) {
+	    if (filesWithQueens[indexRank] == filesWithQueens[lastRankFilled])
+		return true;
+	    else if (Math.abs(filesWithQueens[indexRank] - filesWithQueens[lastRankFilled])
+		     ==  lastRankFilled - indexRank)
+		return true;
+	}
+		  
+        return false;
     }
 
 
@@ -56,7 +70,7 @@ public class BoardForQueensPuzzle {
         This method checks the last-filled rank.
      */
     public boolean accept() {
-        return false;
+        return lastRankFilled == size - 1 && !(lastIsNg());
     }
 
 
@@ -64,6 +78,9 @@ public class BoardForQueensPuzzle {
       Populate the next rank with a queen in position @file
      */
     public void populate( int file) {
+	lastRankFilled++;
+	filesWithQueens[lastRankFilled] = file;
+	
     }
 
 
@@ -73,6 +90,7 @@ public class BoardForQueensPuzzle {
       @precondition: Some rank(s) have been populated.
      */
     public void depopulate() {
+	lastRankFilled--;
     }
 
 
